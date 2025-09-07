@@ -40,7 +40,7 @@
             this.createPassFile = new System.Windows.Forms.Button();
             this.fileName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.safemodebutton = new System.Windows.Forms.Button();
             this.changedirbutton = new System.Windows.Forms.Button();
             this.filteringButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -113,8 +113,9 @@
             // filePassword
             // 
             this.filePassword.Location = new System.Drawing.Point(177, 353);
+            this.filePassword.Multiline = true;
             this.filePassword.Name = "filePassword";
-            this.filePassword.Size = new System.Drawing.Size(349, 20);
+            this.filePassword.Size = new System.Drawing.Size(349, 50);
             this.filePassword.TabIndex = 7;
             // 
             // label3
@@ -152,14 +153,15 @@
             this.label4.TabIndex = 11;
             this.label4.Text = "Name";
             // 
-            // button1
+            // safemodebutton
             // 
-            this.button1.Location = new System.Drawing.Point(451, 410);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Safe mode";
-            this.button1.UseVisualStyleBackColor = true;
+            this.safemodebutton.Location = new System.Drawing.Point(420, 410);
+            this.safemodebutton.Name = "safemodebutton";
+            this.safemodebutton.Size = new System.Drawing.Size(106, 23);
+            this.safemodebutton.TabIndex = 12;
+            this.safemodebutton.Text = "Safe mode : True";
+            this.safemodebutton.UseVisualStyleBackColor = true;
+            this.safemodebutton.Click += new System.EventHandler(this.safemodebutton_Click);
             // 
             // changedirbutton
             // 
@@ -188,7 +190,7 @@
             this.ClientSize = new System.Drawing.Size(538, 446);
             this.Controls.Add(this.filteringButton);
             this.Controls.Add(this.changedirbutton);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.safemodebutton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.fileName);
             this.Controls.Add(this.createPassFile);
@@ -204,6 +206,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.Text = "Maggi\'s password encryptor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -223,7 +226,7 @@
         private System.Windows.Forms.Button createPassFile;
         private System.Windows.Forms.TextBox fileName;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button safemodebutton;
         private System.Windows.Forms.Button changedirbutton;
         private System.Windows.Forms.Button filteringButton;
     }

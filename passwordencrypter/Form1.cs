@@ -15,7 +15,10 @@ namespace passwordencrypter
 {
     public partial class Form1 : Form
     {
-        public string passwordsPath = @"C:\Users\magnu\AppData\Local\MaggiEncryptor";
+        public string passwordsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "MaggiEncryptor"
+        );
         public string selectedFile;
         public System.Windows.Forms.ToolTip cryptographytip = new System.Windows.Forms.ToolTip();
         public bool filteringEnabled = true;
@@ -43,15 +46,12 @@ namespace passwordencrypter
             passwords.Items.Clear();
             foreach (string file in files)
             {
-                if (File.)
+                string name = Path.GetFileName(file);
+                if (!name.EndsWith(".crypt") && filteringEnabled)
                 {
-
+                    continue;
                 }
-                else
-                {
-                    passwords.Items.Add(Path.GetFileName(file));
-                }
-
+                passwords.Items.Add(name);
             }
             if (passwords.Items.Count >= 1)
             {
@@ -134,7 +134,7 @@ namespace passwordencrypter
             {
                 string password = filePassword.Text;
                 string content = filecontent.Text;
-                byte[] encryptedData = cryptographyfunc(filePassword.Text, content, false);
+                byte[] encryptedData = cryptographyfunc(filePassword.Text, "MEncrypt" + content, false);
                 filecontent.Text = Convert.ToBase64String(encryptedData);
                 System.Windows.Forms.ToolTip tooltip1 = new System.Windows.Forms.ToolTip();
                 tooltip1.IsBalloon = true;
@@ -143,7 +143,7 @@ namespace passwordencrypter
             }
             else
             {
-                MessageBox.Show("Password missing.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No password found.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
 
@@ -152,21 +152,26 @@ namespace passwordencrypter
 
         private void decryptbtn_Click(object sender, EventArgs e)
         {
-            string password; // make sure the file name is valid
+
             if (!string.IsNullOrEmpty(filePassword.Text))
             {
-                password = filePassword.Text;
+                string password = filePassword.Text;
                 byte[] decryptedData = cryptographyfunc(filePassword.Text, filecontent.Text, true);
-                filecontent.Text = Encoding.UTF8.GetString(decryptedData); // <-- FIXED
-
-
+                string encodedString = Encoding.UTF8.GetString(decryptedData);
+                if (!encodedString.StartsWith("MEncrypt") && safeMode) // if safe mode is enabled it can detect if the file is actually decrypted
+                {
+                    MessageBox.Show("Wrong password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                encodedString = encodedString.Substring("MEncrypt".Length);
+                filecontent.Text = encodedString;
                 cryptographytip.IsBalloon = true;
                 cryptographytip.Show("Press this to save", writebutton, 0, -40, 3000);
 
             }
             else
             {
-                MessageBox.Show("Password missing.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No password found.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         private void writebutton_Click(object sender, EventArgs e)
@@ -184,7 +189,7 @@ namespace passwordencrypter
                 File.Move(selectedFile, newPath);
                 showFile(newPath); // show the file
             }
-        }
+        }// save to file
 
         private void passwords_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -193,7 +198,7 @@ namespace passwordencrypter
                 string filepath = Path.Combine(passwordsPath, passwords.SelectedItem.ToString());
                 showFile(filepath);
             }
-        }
+        }// list index change
 
         private void createPassFile_Click(object sender, EventArgs e)
         {
@@ -256,7 +261,29 @@ namespace passwordencrypter
         private void filteringButton_Click(object sender, EventArgs e)
         {
             filteringEnabled = !filteringEnabled;
-            filteringButton.Text = "Filtering "+filteringEnabled;
+            filteringButton.Text = "Filtering : "+filteringEnabled;
+            refreshList();
+        }
+
+
+
+
+
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) 
+        {
+            var result = MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+
+        }
+
+        private void safemodebutton_Click(object sender, EventArgs e)
+        {
+            safeMode = !safeMode;
+            safemodebutton.Text = "Safe mode : " + safeMode;
         }
     }
 }
