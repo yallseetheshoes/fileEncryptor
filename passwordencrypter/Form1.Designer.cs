@@ -80,7 +80,7 @@
             this.writebutton.Name = "writebutton";
             this.writebutton.Size = new System.Drawing.Size(49, 23);
             this.writebutton.TabIndex = 3;
-            this.writebutton.Text = "Write";
+            this.writebutton.Text = "Save";
             this.writebutton.UseVisualStyleBackColor = true;
             this.writebutton.Click += new System.EventHandler(this.writebutton_Click);
             // 

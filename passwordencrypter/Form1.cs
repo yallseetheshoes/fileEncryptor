@@ -83,12 +83,26 @@ namespace passwordencrypter
                     string content = File.ReadAllText(filepath);
                     filecontent.Text = content;
                     fileName.Text = Path.GetFileNameWithoutExtension(filepath);
-                    fileName.Enabled = true;
-                    filecontent.Enabled = true;
-                    filePassword.Enabled = true;
-                    writebutton.Enabled = true;
-                    decryptbtn.Enabled = true;
-                    encryptbtn.Enabled = true;
+                    string extension = Path.GetExtension(filepath);
+                    if (extension.Equals(".crypt",StringComparison.OrdinalIgnoreCase))
+                    {
+                        fileName.Enabled = true;
+                        filecontent.Enabled = true;
+                        filePassword.Enabled = true;
+                        writebutton.Enabled = true;
+                        decryptbtn.Enabled = true;
+                        encryptbtn.Enabled = true;
+                    }
+                    else
+                    {
+                        fileName.Enabled = false;
+                        filecontent.Enabled = false;
+                        filePassword.Enabled = false;
+                        writebutton.Enabled = false;
+                        decryptbtn.Enabled = false;
+                        encryptbtn.Enabled = false;
+                    }
+
 
                 }
                 else
@@ -191,19 +205,30 @@ namespace passwordencrypter
         }
         private void writebutton_Click(object sender, EventArgs e)
         {
+
+
             string newName = fileName.Text + ".crypt";
             string newContent = filecontent.Text;
             string newPath = Path.Combine(passwordsPath, newName);
-            if (selectedFile != null && File.Exists(newPath))
-            {
 
-                passwords.SelectedIndexChanged -= passwords_SelectedIndexChanged; // unsubscribe so it doesnt cause issues
-                passwords.Items[passwords.SelectedIndex] = newName;
-                passwords.SelectedIndexChanged += passwords_SelectedIndexChanged; // resubscribe
-                File.WriteAllText(selectedFile, newContent);
-                File.Move(selectedFile, newPath);
-                showFile(newPath); // show the file
+            if (File.Exists(newPath))
+            {
+                var result = MessageBox.Show(
+                    "A file with this name already exists. Do you want to overwrite it?",
+                    "Save",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Information
+                );
+
+                if (result != DialogResult.OK) return; 
             }
+
+
+            File.WriteAllText(newPath, newContent);
+
+
+            selectedFile = newPath;
+            refreshList();
         }// save to file
 
         private void passwords_SelectedIndexChanged(object sender, EventArgs e)
