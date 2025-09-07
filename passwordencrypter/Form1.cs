@@ -19,6 +19,7 @@ namespace passwordencrypter
         public string selectedFile;
         public System.Windows.Forms.ToolTip cryptographytip = new System.Windows.Forms.ToolTip();
         public bool filteringEnabled = true;
+        public bool safeMode = true;
         public Form1()
         {
             InitializeComponent();
@@ -58,6 +59,7 @@ namespace passwordencrypter
                 selectedFile = passwords.Items[passwords.SelectedIndex].ToString();
             }
         }
+
         private void showFile(string filepath)
         {
             if (filepath == null)
