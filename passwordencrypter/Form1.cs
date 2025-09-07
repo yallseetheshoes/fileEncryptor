@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -69,6 +70,10 @@ namespace passwordencrypter
                 fileName.Enabled = false;
                 filecontent.Enabled = false;
                 filePassword.Enabled = false;
+                writebutton.Enabled = false;
+                decryptbtn.Enabled = false;
+                encryptbtn.Enabled = false;
+                passwords.Enabled = false;
             }
             else 
             {
@@ -81,6 +86,10 @@ namespace passwordencrypter
                     fileName.Enabled = true;
                     filecontent.Enabled = true;
                     filePassword.Enabled = true;
+                    writebutton.Enabled = true;
+                    decryptbtn.Enabled = true;
+                    encryptbtn.Enabled = true;
+
                 }
                 else
                 {
@@ -155,19 +164,25 @@ namespace passwordencrypter
 
             if (!string.IsNullOrEmpty(filePassword.Text))
             {
-                string password = filePassword.Text;
-                byte[] decryptedData = cryptographyfunc(filePassword.Text, filecontent.Text, true);
-                string encodedString = Encoding.UTF8.GetString(decryptedData);
-                if (!encodedString.StartsWith("MEncrypt") && safeMode) // if safe mode is enabled it can detect if the file is actually decrypted
+                try
                 {
-                    MessageBox.Show("Wrong password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    string password = filePassword.Text;
+                    byte[] decryptedData = cryptographyfunc(filePassword.Text, filecontent.Text, true);
+                    string encodedString = Encoding.UTF8.GetString(decryptedData);
+                    if (!encodedString.StartsWith("MEncrypt") && safeMode) // if safe mode is enabled it can detect if the file is actually decrypted
+                    {
+                        MessageBox.Show("Wrong password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    encodedString = encodedString.Substring("MEncrypt".Length);
+                    filecontent.Text = encodedString;
+                    cryptographytip.IsBalloon = true;
+                    cryptographytip.Show("Press this to save", writebutton, 0, -40, 3000);
                 }
-                encodedString = encodedString.Substring("MEncrypt".Length);
-                filecontent.Text = encodedString;
-                cryptographytip.IsBalloon = true;
-                cryptographytip.Show("Press this to save", writebutton, 0, -40, 3000);
-
+                catch
+                {
+                    MessageBox.Show("AES Decryption failed, this may be to an invalid password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
@@ -209,7 +224,6 @@ namespace passwordencrypter
             {
                 passwords.SelectedIndex = -1;
                 showFile(null); // clear the labels
-                MessageBox.Show("You can now name the new file.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 fileName.Enabled = true;
             }
             else //if not, attempt to make a new file
@@ -235,6 +249,7 @@ namespace passwordencrypter
                     File.WriteAllText(newfile, "");
                     passwords.Items.Add(Path.GetFileName(newfile));
                     showFile(newfile); // show the file
+                    passwords.Enabled = true;
                 }
             }
         }
@@ -284,6 +299,15 @@ namespace passwordencrypter
         {
             safeMode = !safeMode;
             safemodebutton.Text = "Safe mode : " + safeMode;
+        }
+
+        private void viewDirBtn_Click(object sender, EventArgs e)
+        {
+            string folderPath = passwordsPath;
+            if (Directory.Exists(folderPath))
+            {
+                Process.Start("explorer.exe", folderPath);
+            }
         }
     }
 }

@@ -43,6 +43,7 @@
             this.safemodebutton = new System.Windows.Forms.Button();
             this.changedirbutton = new System.Windows.Forms.Button();
             this.filteringButton = new System.Windows.Forms.Button();
+            this.viewDirBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // passwords
@@ -106,9 +107,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(174, 337);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 13);
+            this.label2.Size = new System.Drawing.Size(111, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Password";
+            this.label2.Text = "Password - Not saved";
             // 
             // filePassword
             // 
@@ -123,9 +124,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(174, 123);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 13);
+            this.label3.Size = new System.Drawing.Size(68, 13);
             this.label3.TabIndex = 8;
-            this.label3.Text = "Content";
+            this.label3.Text = "File Contents";
             // 
             // createPassFile
             // 
@@ -149,9 +150,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(174, 84);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.Size = new System.Drawing.Size(52, 13);
             this.label4.TabIndex = 11;
-            this.label4.Text = "Name";
+            this.label4.Text = "File name";
             // 
             // safemodebutton
             // 
@@ -183,11 +184,22 @@
             this.filteringButton.UseVisualStyleBackColor = true;
             this.filteringButton.Click += new System.EventHandler(this.filteringButton_Click);
             // 
+            // viewDirBtn
+            // 
+            this.viewDirBtn.Location = new System.Drawing.Point(278, 28);
+            this.viewDirBtn.Name = "viewDirBtn";
+            this.viewDirBtn.Size = new System.Drawing.Size(98, 23);
+            this.viewDirBtn.TabIndex = 15;
+            this.viewDirBtn.Text = "View";
+            this.viewDirBtn.UseVisualStyleBackColor = true;
+            this.viewDirBtn.Click += new System.EventHandler(this.viewDirBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(538, 446);
+            this.Controls.Add(this.viewDirBtn);
             this.Controls.Add(this.filteringButton);
             this.Controls.Add(this.changedirbutton);
             this.Controls.Add(this.safemodebutton);
@@ -229,6 +241,7 @@
         private System.Windows.Forms.Button safemodebutton;
         private System.Windows.Forms.Button changedirbutton;
         private System.Windows.Forms.Button filteringButton;
+        private System.Windows.Forms.Button viewDirBtn;
     }
 }
 
