@@ -1,3 +1,3 @@
-Simple password encryptor written in c# using windows forms.
+Simple password encryptor written in C# using Windows Forms.
 
-Not specifically the most secure encryptor out there just an experiment project.
+Don't expect good security from this.
